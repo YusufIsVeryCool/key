@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Moon — Key Access</title>
+  <style>
+    /* ====== THEME ====== */
+    :root {
+      --bg-top: #0b1324;
+      --bg-main: #0f172a;
+      --card-bg: #111827;
+      --accent: #60a5fa;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --radius: 12px;
+      --shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-main);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ====== NAVBAR ====== */
+    header {
+      background: var(--bg-top);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      z-index: 10;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .search-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="search"] {
+      background: #1e293b;
+      border: none;
+      border-radius: var(--radius);
+      padding: 6px 12px;
+      color: var(--text);
+      width: 200px;
+      outline: none;
+    }
+
+    select {
+      background: #1e293b;
+      border: none;
+      border-radius: var(--radius);
+      padding: 6px 10px;
+      color: var(--text);
+    }
+
+    .settings {
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    /* ====== MAIN CONTENT ====== */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      width: 350px;
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .card h2 {
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .card p {
+      color: var(--muted);
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+
+    .card input {
+      width: 100%;
+      padding: 10px;
+      border-radius: var(--radius);
+      border: 1px solid #1f2937;
+      background: #1e293b;
+      color: var(--text);
+      outline: none;
+      font-size: 1rem;
+    }
+
+    .card button {
+      width: 100%;
+      margin-top: 14px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      padding: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .card button:hover {
+      background: #3b82f6;
+    }
+
+    .hint {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Moon</div>
+    <div class="search-area">
+      <input type="search" placeholder="Search zones..." disabled />
+      <select disabled>
+        <option>Name</option>
+      </select>
+    </div>
+    <div class="settings">Settings</div>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Access Required</h2>
+      <p>Enter your access key to continue to Moon.</p>
+      <input id="keyInput" type="text" placeholder="Enter key" />
+      <button id="submitBtn">Submit</button>
+      <div class="hint">If popup is blocked, you’ll be redirected here.</div>
+    </div>
+  </main>
+
+  <script>
+    const correctKey = "YOURKEY123"; // Replace with your real key
+    const targetUrl = "https://yusufisverycool.github.io";
+
+    function sanitized(v) { return (v || "").toString().trim(); }
+
+    function checkKey() {
+      const key = sanitized(document.getElementById("keyInput").value);
+      if (!key) return;
+
+      if (key === correctKey) {
+        const popup = window.open("about:blank", "_blank", "noopener,noreferrer");
+        if (popup) {
+          try {
+            popup.location.replace(targetUrl);
+          } catch {
+            popup.document.write('<meta http-equiv="refresh" content="0;url=' + encodeURI(targetUrl) + '">');
+            popup.document.close();
+          }
+        } else {
+          window.location.href = targetUrl;
+        }
+      } else {
+        const input = document.getElementById("keyInput");
+        input.style.border = "1px solid #f87171";
+        setTimeout(() => input.style.border = "1px solid #1f2937", 800);
+      }
+    }
+
+    document.getElementById("submitBtn").addEventListener("click", checkKey);
+    document.getElementById("keyInput").addEventListener("keydown", e => {
+      if (e.key === "Enter") checkKey();
+    });
+  </script>
+</body>
+</html>
